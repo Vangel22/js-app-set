@@ -10,7 +10,8 @@ const init = () => {
   const username = config.get("db").username;
   const password = config.get("db").password;
   const dbname = config.get("db").dbname;
-  const dsn = `mongodb+srv://${username}:${password}@${url}/${dbname}?retryWrites=true&w=majority`;
+  const dsn = `mongodb+srv://Vangel22:${password}@cluster0.12jzasd.mongodb.net/wbs-g2?retryWrites=true&w=majority`;
+
   mongoose.connect(dsn, (err) => {
     if (err) {
       return console.log("Could not connect to db", err);

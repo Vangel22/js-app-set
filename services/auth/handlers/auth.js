@@ -5,6 +5,7 @@ const config = require("../../../pkg/config");
 
 const create = async (req, res) => {
   try {
+    // throw Error("Testing");
     // 1. провери дали двете лозинки се еднакви
     if (
       // req.body.password.trim().length === 0 ||
