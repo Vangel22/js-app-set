@@ -3,6 +3,10 @@ const config = require("../config");
 
 const init = () => {
   const url = config.get("db").url;
+  // ${username}: Your MongoDB username
+  // ${password}: Your MongoDB password
+  // ${url}: The URL of your MongoDB cluster or server (excluding the port number)
+  // ${dbname}: The name of the MongoDB database you want to connect to
   const username = config.get("db").username;
   const password = config.get("db").password;
   const dbname = config.get("db").dbname;
