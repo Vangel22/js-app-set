@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-const PORT = process.env.PORT || config.get("services").proxy.port;
+const PORT = process.env.PORT || config.getSection("services").proxy.port;
 
 app.listen(PORT, (err) => {
   if (err) {

@@ -1,5 +1,5 @@
-const post = require("../pkg/blog");
-const { BlogPOST, BlogPUT, validate } = require("../pkg/blog/validate");
+const post = require("../../../pkg/posts");
+const { BlogPOST, BlogPUT, validate } = require("../../../pkg/posts/validate");
 
 const getAll = async (req, res) => {
   try {
