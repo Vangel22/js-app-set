@@ -1,76 +1,81 @@
-const posts = require('../../../pkg/posts');
-const authors = require('../../../pkg/authors');
+const post = require("../pkg/blog");
+const { BlogPOST, BlogPUT, validate } = require("../pkg/blog/validate");
 
 const getAll = async (req, res) => {
-    try {
-        let ps = await posts.getAll();
-        res.status(200).send(ps);
-    } catch(err) {
-        return res.status(500).send('ISE!');
-    }
+  try {
+    const data = await post.getAll(req.auth.id);
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
-const getMine = async (req, res) => {
-    try {
-        let ps = await posts.getUserPosts(req.auth.uid);
-        res.status(200).send(ps);
-    } catch (err) {
-        return res.status(500).send('ISE!');
-    }
-};
+const getSingle = async (req, res) => {
+  try {
+    const data = await post.getSingle(req.auth.id, req.params.id);
 
-const getUsers = async (req, res) => {
-    try {
-        let u = await authors.getByHandle(req.params.handle);
-        let ps = await posts.getUserPosts(u._id);
-        res.status(200).send(ps);
-    } catch (err) {
-        return res.status(500).send('ISE!');
+    if (!data) {
+      return res.status(404).send("Post not found!");
     }
+
+    return res.status(200).send(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
 const create = async (req, res) => {
-    try {
-        let payload = {
-            ...req.body,
-            author_id: req.auth.uid,
-            published_on: new Date()
-        };
-        let c = await posts.create(payload);
-        return req.status(201).send(c);
-    } catch (err) {
-        return res.status(500).send('ISE!');
+  try {
+    await validate(req.body, BlogPOST);
+    if (!req.auth.id) {
+      return res.status(400).send("Unauthorized action!");
     }
+    const data = {
+      ...req.body,
+      account_id: req.auth.id,
+    };
+    const newPost = await post.create(data);
+    return res.status(200).send(newPost);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
 const update = async (req, res) => {
-    try {
-        let payload = {
-            ...req.body,
-            author_id: req.auth.uid,
-            published_on: new Date()
-        };
-        await posts.update(req.params.id, req.auth.uid, payload);
-        return req.status(204).send('');
-    } catch (err) {
-        return res.status(500).send('ISE!');
+  try {
+    await validate(req.body, BlogPUT);
+    if (!req.auth.id) {
+      return res.status(400).send("Unauthorized action!");
     }
+    const data = {
+      ...req.body,
+      account_id: req.auth.id,
+    };
+    await post.update(req.params.id, data);
+    return res.status(204).send("Update successful");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
 const remove = async (req, res) => {
-    try {
-        await posts.remove(req.params.id, req.auth.uid);
-        return req.status(204).send('');
-    } catch (err) {
-        return res.status(500).send('ISE!');
-    }
+  try {
+    await post.remove(req.params.id);
+    return res.status(200).send("Deleted successful");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
 module.exports = {
-    getAll,
-    getMine,
-    getUsers,
-    create,
-    update,
-    remove
+  getAll,
+  getSingle,
+  create,
+  update,
+  remove,
 };

@@ -1,40 +1,40 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Post = mongoose.model(
-    'posts',
-    {
-        author_id: String,
-        content: String,
-        published_on: Date
-    },
-    'posts'
-);
+const postSchema = mongoose.Schema({
+  account_id: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "accounts",
+  },
+  title: String,
+  content: String,
+});
 
-const getAll = async () => {
-    return Post.find({});
+const Post = mongoose.model("posts", postSchema, "posts");
+
+const getAll = async (account_id) => {
+  return await Post.find({ account_id });
 };
 
-const getUserPosts = async (author_id) => {
-    return Post.find({author_id});
+const getSingle = async (account_id, id) => {
+  return await Post.findOne({ account_id: account_id, _id: id });
 };
 
 const create = async (data) => {
-    const p = new Post(data);
-    return p.save();
+  const post = new Post(data);
+  return await post.save();
 };
 
-const update = async (id, uid, data) => {
-    return Post.updateOne({_id: id, author_id: uid}, data);
+const update = async (id, data) => {
+  return await Post.updateOne({ _id: id }, data);
 };
-
-const remove = async (id, uid) => {
-    return Post.deleteOne({_id: id, author_id: uid});
+const remove = async (id) => {
+  return await Post.deleteOne({ _id: id });
 };
 
 module.exports = {
-    getAll,
-    getUserPosts,
-    create,
-    update,
-    remove
+  getAll,
+  getSingle,
+  create,
+  update,
+  remove,
 };
