@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install",
-    "start": "node ./services/proxy/index.js & node ./services/auth/index.js & node ./services/posts/index.js & node ./services/storage/index.js"
+    "start": "concurrently \"node ./services/proxy/index.js\" \"node ./services/auth/index.js\" \"node ./services/posts/index.js\" \"node ./services/storage/index.js\" \"cd ./web && npm start\"",
+    "start-web": "npm start ./web"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.2",
     "node-input-validator": "^4.5.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
