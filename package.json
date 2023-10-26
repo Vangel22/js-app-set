@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install & npm start",
+    "build": "npm install",
     "start": "node ./services/proxy/index.js & node ./services/auth/index.js & node ./services/posts/index.js & node ./services/storage/index.js"
   },
   "keywords": [],
